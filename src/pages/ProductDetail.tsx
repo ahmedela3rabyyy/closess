@@ -92,7 +92,7 @@ export default function ProductDetail() {
           <motion.button
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/')}
             className="flex items-center gap-3 text-gray-500 hover:text-primary transition-colors mb-12 group"
           >
             <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-primary">

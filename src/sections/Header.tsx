@@ -41,8 +41,8 @@ export default function Header() {
       <header 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
           isScrolled 
-            ? 'bg-black/80 backdrop-blur-xl border-b border-white/10 py-3' 
-            : 'bg-transparent py-5'
+            ? 'bg-black/80 backdrop-blur-xl border-b border-white/10 py-2' 
+            : 'bg-transparent py-3'
         }`}
       >
         {/* Top Announcement Bar */}
@@ -52,9 +52,9 @@ export default function Header() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden bg-primary/10 border-b border-primary/20 mb-2"
+              className="overflow-hidden bg-primary/10 border-b border-primary/20 mb-1"
             >
-              <p className="text-center text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] py-2 font-medium">
+              <p className="text-center text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] py-1.5 font-medium">
                 Free Shipping on Orders Over $100 • 30-Day Returns
               </p>
             </motion.div>
@@ -151,7 +151,7 @@ export default function Header() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="hidden lg:flex justify-center gap-10 mt-3 pt-3 border-t border-white/5"
+              className="hidden lg:flex justify-center gap-8 mt-2 pt-2 border-t border-white/5"
             >
               {navItems.map((item) => (
                 <Link

@@ -28,7 +28,7 @@ export default function Wishlist() {
         <div className="max-w-6xl mx-auto px-4">
           {/* Back Button */}
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/')}
             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6"
           >
             <ArrowLeft size={20} />

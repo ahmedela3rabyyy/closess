@@ -1,8 +1,9 @@
 import { X, Plus, Minus, ShoppingBag, Trash2, ArrowRight, Sparkles } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 export default function CartDrawer() {
+  const navigate = useNavigate();
   const {
     items,
     removeFromCart,
@@ -66,7 +67,10 @@ export default function CartDrawer() {
                 Looks like you haven't added anything to your cart yet.
               </p>
               <button
-                onClick={() => setIsCartOpen(false)}
+                onClick={() => {
+                  setIsCartOpen(false);
+                  navigate('/shop');
+                }}
                 className="bg-[#00bfff] text-black px-8 py-3 font-bold uppercase tracking-wider hover:bg-[#00a0e0] transition-all rounded-xl flex items-center gap-2"
               >
                 Continue Shopping
@@ -204,7 +208,10 @@ export default function CartDrawer() {
               </Link>
               <div className="flex gap-3">
                 <button
-                  onClick={() => setIsCartOpen(false)}
+                  onClick={() => {
+                    setIsCartOpen(false);
+                    navigate('/shop');
+                  }}
                   className="flex-1 bg-gray-800 text-white py-3 font-medium uppercase tracking-wider hover:bg-gray-700 transition-all rounded-xl"
                 >
                   Continue Shopping
