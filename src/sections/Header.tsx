@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, Search, User, ShoppingBag, X, Heart } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import SearchModal from './SearchModal';
@@ -16,7 +17,7 @@ export default function Header() {
   // Track scroll position
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -38,184 +39,192 @@ export default function Header() {
   return (
     <>
       <header 
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
           isScrolled 
-            ? 'bg-black/95 backdrop-blur-md shadow-lg shadow-black/20' 
-            : 'bg-transparent'
+            ? 'bg-black/80 backdrop-blur-xl border-b border-white/10 py-3' 
+            : 'bg-transparent py-5'
         }`}
       >
-        {/* Top Bar - Only visible when scrolled */}
-        <div 
-          className={`overflow-hidden transition-all duration-500 ${
-            isScrolled ? 'max-h-0' : 'max-h-10'
-          }`}
-        >
-          <div className="bg-[#00bfff]/10 border-b border-[#00bfff]/20 py-2 px-4">
-            <p className="text-center text-[#00bfff] text-xs uppercase tracking-widest">
-              Free Shipping on Orders Over $100
-            </p>
-          </div>
-        </div>
+        {/* Top Announcement Bar */}
+        <AnimatePresence>
+          {!isScrolled && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden bg-primary/10 border-b border-primary/20 mb-2"
+            >
+              <p className="text-center text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] py-2 font-medium">
+                Free Shipping on Orders Over $100 • 30-Day Returns
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        <div className="flex items-center justify-between px-4 lg:px-8 py-4">
-          {/* Left Icons */}
-          <div className="flex items-center gap-4">
-            <button
+        <div className="responsive-container flex items-center justify-between">
+          {/* Left: Menu & Search */}
+          <div className="flex items-center gap-2 md:gap-6 w-1/3">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white hover:text-[#00bfff] transition-colors p-2 hover:bg-white/5 rounded-lg"
+              className="text-white p-2 hover:bg-white/5 rounded-full transition-colors relative z-50"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setIsSearchOpen(true)}
-              className="text-white hover:text-[#00bfff] transition-colors p-2 hover:bg-white/5 rounded-lg hidden sm:block"
+              className="text-white p-2 hover:bg-white/5 rounded-full transition-colors hidden sm:block"
             >
               <Search size={22} />
-            </button>
+            </motion.button>
           </div>
 
-          {/* Logo */}
-          <Link 
-            to="/" 
-            className="absolute left-1/2 transform -translate-x-1/2 group"
-          >
-            <div className="relative">
-              <svg
-                viewBox="0 0 120 40"
-                className="h-8 w-auto transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(0,191,255,0.5)]"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+          {/* Center: Logo */}
+          <div className="flex justify-center w-1/3">
+            <Link to="/" className="group relative">
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-1"
               >
-                <text
-                  x="10"
-                  y="30"
-                  fill="#00bfff"
-                  fontFamily="Arial, sans-serif"
-                  fontSize="28"
-                  fontWeight="bold"
-                  fontStyle="italic"
-                >
+                <span className="text-2xl md:text-3xl font-black italic tracking-tighter text-white group-hover:text-primary transition-colors duration-500">
                   COVE
-                </text>
-                <circle cx="95" cy="20" r="8" fill="#00bfff" opacity="0.8" />
-                <circle cx="105" cy="20" r="6" fill="#00bfff" opacity="0.5" />
-              </svg>
-            </div>
-          </Link>
-
-          {/* Right Icons */}
-          <div className="flex items-center gap-2">
-            <Link
-              to="/wishlist"
-              className="text-white hover:text-[#00bfff] transition-colors p-2 hover:bg-white/5 rounded-lg relative"
-            >
-              <Heart size={22} />
-              {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#00bfff] text-black text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
-                  {wishlistCount}
                 </span>
-              )}
+                <div className="flex -space-x-1">
+                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-primary/40" />
+                </div>
+              </motion.div>
             </Link>
-            <Link
-              to="/auth"
-              className="text-white hover:text-[#00bfff] transition-colors p-2 hover:bg-white/5 rounded-lg"
-            >
-              <User size={22} />
+          </div>
+
+          {/* Right: Actions */}
+          <div className="flex items-center justify-end gap-1 md:gap-4 w-1/3">
+            <Link to="/wishlist">
+              <motion.div 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="text-white p-2 hover:bg-white/5 rounded-full transition-colors relative"
+              >
+                <Heart size={22} className={wishlistCount > 0 ? 'fill-primary text-primary' : ''} />
+                {wishlistCount > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 bg-primary text-black text-[10px] font-bold rounded-full flex items-center justify-center">
+                    {wishlistCount}
+                  </span>
+                )}
+              </motion.div>
             </Link>
-            <button
+            
+            <Link to="/auth" className="hidden sm:block">
+              <motion.div 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="text-white p-2 hover:bg-white/5 rounded-full transition-colors"
+              >
+                <User size={22} />
+              </motion.div>
+            </Link>
+
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setIsCartOpen(true)}
-              className="text-white hover:text-[#00bfff] transition-colors p-2 hover:bg-white/5 rounded-lg relative"
+              className="text-white p-2 hover:bg-white/5 rounded-full transition-colors relative"
             >
               <ShoppingBag size={22} />
               {totalItems > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#00bfff] text-black text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                <span className="absolute top-1 right-1 w-4 h-4 bg-primary text-black text-[10px] font-bold rounded-full flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
-            </button>
+            </motion.button>
           </div>
         </div>
 
-        {/* Desktop Navigation - Visible when scrolled */}
-        <nav 
-          className={`hidden lg:flex justify-center gap-8 pb-3 transition-all duration-500 ${
-            isScrolled ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
-        >
-          {navItems.map((item) => (
-            <Link
-              key={item.name}
-              to={item.path}
-              className={`text-sm font-medium uppercase tracking-wider transition-colors relative group ${
-                isActive(item.path) 
-                  ? 'text-[#00bfff]' 
-                  : 'text-gray-400 hover:text-white'
-              }`}
+        {/* Desktop Mini Nav - Show on scroll or always? Let's show it subtly on scroll */}
+        <AnimatePresence>
+          {isScrolled && (
+            <motion.nav 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="hidden lg:flex justify-center gap-10 mt-3 pt-3 border-t border-white/5"
             >
-              {item.name}
-              <span className={`absolute -bottom-1 left-0 h-0.5 bg-[#00bfff] transition-all duration-300 ${
-                isActive(item.path) ? 'w-full' : 'w-0 group-hover:w-full'
-              }`} />
-            </Link>
-          ))}
-        </nav>
-
-        {/* Mobile Menu */}
-        <div 
-          className={`lg:hidden overflow-hidden transition-all duration-500 ${
-            isMenuOpen ? 'max-h-screen' : 'max-h-0'
-          }`}
-        >
-          <nav className="bg-black/95 backdrop-blur-md border-t border-gray-800 px-4 py-6">
-            <ul className="space-y-1">
               {navItems.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    to={item.path}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`block text-lg font-medium py-3 px-4 rounded-lg transition-all ${
-                      isActive(item.path)
-                        ? 'text-[#00bfff] bg-[#00bfff]/10'
-                        : 'text-white hover:text-[#00bfff] hover:bg-white/5'
-                    }`}
-                  >
-                    {item.name}
-                  </Link>
-                </li>
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={`text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative group ${
+                    isActive(item.path) ? 'text-primary' : 'text-gray-500 hover:text-white'
+                  }`}
+                >
+                  {item.name}
+                  <motion.span 
+                    className="absolute -bottom-1 left-0 h-[1px] bg-primary"
+                    initial={{ width: 0 }}
+                    animate={{ width: isActive(item.path) ? '100%' : 0 }}
+                    whileHover={{ width: '100%' }}
+                  />
+                </Link>
               ))}
-              <li className="border-t border-gray-800 pt-4 mt-4">
-                <Link
-                  to="/about"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block text-gray-400 text-lg py-3 px-4 rounded-lg hover:text-white hover:bg-white/5 transition-all"
-                >
-                  ABOUT US
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/contact"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block text-gray-400 text-lg py-3 px-4 rounded-lg hover:text-white hover:bg-white/5 transition-all"
-                >
-                  CONTACT
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/faq"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block text-gray-400 text-lg py-3 px-4 rounded-lg hover:text-white hover:bg-white/5 transition-all"
-                >
-                  FAQ
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
+
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMenuOpen(false)}
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+              />
+              <motion.div
+                initial={{ x: '-100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '-100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm bg-black/95 backdrop-blur-2xl z-50 p-8 pt-24 border-r border-white/10"
+              >
+                <div className="flex flex-col gap-8">
+                  {navItems.map((item, i) => (
+                    <motion.div
+                      key={item.name}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                    >
+                      <Link
+                        to={item.path}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-3xl font-black italic tracking-tighter text-white hover:text-primary transition-colors flex items-center justify-between group"
+                      >
+                        {item.name}
+                        <X className="opacity-0 group-hover:opacity-100 -rotate-45 transition-all text-primary" size={20} />
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+                
+                <div className="mt-20 pt-10 border-t border-white/5 flex flex-col gap-6">
+                  <Link to="/about" onClick={() => setIsMenuOpen(false)} className="text-gray-400 font-bold uppercase tracking-widest text-sm hover:text-white transition-colors">About Us</Link>
+                  <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="text-gray-400 font-bold uppercase tracking-widest text-sm hover:text-white transition-colors">Contact</Link>
+                  <Link to="/faq" onClick={() => setIsMenuOpen(false)} className="text-gray-400 font-bold uppercase tracking-widest text-sm hover:text-white transition-colors">Support</Link>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </header>
 
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );
 }
+
