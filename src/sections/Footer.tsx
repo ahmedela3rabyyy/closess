@@ -1,41 +1,38 @@
 import { Link } from 'react-router-dom';
-import { Instagram, Facebook, Twitter, Mail, MapPin, Phone, ArrowUpRight } from 'lucide-react';
+import { Instagram, Facebook, Twitter, Mail, MapPin, Phone, ArrowUpRight, Youtube } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-black border-t border-gray-800">
-      {/* Main Footer */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12">
-          {/* Brand */}
-          <div className="lg:col-span-2">
-            <Link to="/" className="inline-block mb-6">
-              <svg
-                viewBox="0 0 120 40"
-                className="h-10 w-auto"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <text
-                  x="10"
-                  y="30"
-                  fill="#00bfff"
-                  fontFamily="Arial, sans-serif"
-                  fontSize="28"
-                  fontWeight="bold"
-                  fontStyle="italic"
-                >
-                  COVE
-                </text>
-                <circle cx="95" cy="20" r="8" fill="#00bfff" opacity="0.8" />
-                <circle cx="105" cy="20" r="6" fill="#00bfff" opacity="0.5" />
-              </svg>
+    <footer className="bg-black pt-20 pb-10 border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
+          {/* Logo & Description */}
+          <div className="col-span-2 space-y-8">
+            <Link to="/" className="group inline-flex items-center">
+              <div className="relative flex items-center">
+                {/* The "NY" - Sleek and High-end */}
+                <span className="text-3xl md:text-5xl font-extralight italic tracking-tighter text-white/90">
+                  NY
+                </span>
+                
+                {/* The "X" - Integrated & Luminous */}
+                <div className="relative ml-1">
+                  <span className="text-3xl md:text-5xl font-black italic tracking-tighter text-white">
+                    X
+                  </span>
+                  {/* The Cyan Slash Overlay */}
+                  <div className="absolute inset-0 bg-primary clip-x-slash mix-blend-screen shadow-[0_0_30px_#00bfff]" />
+                </div>
+
+                {/* The North Star Dot */}
+                <div className="absolute -top-2 left-[40%] w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_12px_#00bfff]" />
+              </div>
             </Link>
-            <p className="text-gray-400 leading-relaxed mb-6 max-w-sm">
-              Redefining modern fashion with comfort, style, and sustainability. 
-              Premium quality clothing for everyone.
+            <p className="text-gray-500 leading-relaxed max-w-xs font-medium italic">
+              "Architectural Minimalism • Midnight Luxury"
             </p>
             {/* Social Icons */}
             <div className="flex gap-3">
@@ -43,14 +40,16 @@ export default function Footer() {
                 { icon: Instagram, href: '#' },
                 { icon: Facebook, href: '#' },
                 { icon: Twitter, href: '#' },
-              ].map((social, index) => (
-                <a
-                  key={index}
+                { icon: Youtube, href: '#' },
+              ].map((social, i) => (
+                <motion.a
+                  key={i}
                   href={social.href}
-                  className="w-11 h-11 bg-gray-900 border border-gray-800 rounded-xl flex items-center justify-center text-gray-400 hover:bg-[#00bfff] hover:text-black hover:border-[#00bfff] transition-all duration-300"
+                  whileHover={{ y: -5, backgroundColor: '#00bfff', color: '#000000' }}
+                  className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-500 transition-all"
                 >
-                  <social.icon size={20} />
-                </a>
+                  <social.icon size={18} />
+                </motion.a>
               ))}
             </div>
           </div>
@@ -132,7 +131,7 @@ export default function Footer() {
                 <div className="w-8 h-8 bg-[#00bfff]/10 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Mail size={16} className="text-[#00bfff]" />
                 </div>
-                <span className="text-gray-400 text-sm">support@cove.com</span>
+                <span className="text-gray-400 text-sm">support@nyx.com</span>
               </li>
             </ul>
           </div>
@@ -144,7 +143,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-gray-500 text-sm">
-              © {currentYear} COVE. All rights reserved.
+              © {currentYear} NYX. All rights reserved.
             </p>
             <div className="flex gap-6">
               <Link

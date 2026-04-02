@@ -40,28 +40,27 @@ export default function Header() {
     <>
       <header 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
-          isScrolled 
+          (isScrolled || location.pathname !== '/') 
             ? 'bg-black/80 backdrop-blur-xl border-b border-white/10 py-2' 
-            : 'bg-transparent py-3'
+            : 'bg-transparent py-4'
         }`}
       >
-        {/* Top Announcement Bar */}
         <AnimatePresence>
           {!isScrolled && (
             <motion.div 
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden bg-primary/10 border-b border-primary/20 mb-1"
+              className="overflow-hidden bg-primary/10 border-b border-primary/20 mb-2"
             >
-              <p className="text-center text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] py-1.5 font-medium">
+              <p className="text-center text-primary text-[10px] md:text-xs uppercase tracking-[0.3em] py-2 font-medium">
                 Free Shipping on Orders Over $100 • 30-Day Returns
               </p>
             </motion.div>
           )}
         </AnimatePresence>
 
-        <div className="responsive-container flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-3 flex items-center justify-between">
           {/* Left: Menu & Search */}
           <div className="flex items-center gap-2 md:gap-6 w-1/3">
             <motion.button
@@ -82,20 +81,40 @@ export default function Header() {
             </motion.button>
           </div>
 
-          {/* Center: Logo */}
           <div className="flex justify-center w-1/3">
             <Link to="/" className="group relative">
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-1"
+                className="flex items-center"
               >
-                <span className="text-2xl md:text-3xl font-black italic tracking-tighter text-white group-hover:text-primary transition-colors duration-500">
-                  COVE
-                </span>
-                <div className="flex -space-x-1">
-                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                  <div className="w-2 h-2 rounded-full bg-primary/40" />
+                <div className="relative flex items-center">
+                  {/* The "NY" - Sleek and High-end */}
+                  <span className="text-2xl md:text-4xl font-extralight italic tracking-tighter text-white/90">
+                    NY
+                  </span>
+                  
+                  {/* The "X" - Integrated & Luminous */}
+                  <div className="relative ml-0.5">
+                    <span className="text-2xl md:text-4xl font-black italic tracking-tighter text-white">
+                      X
+                    </span>
+                    {/* The Cyan Slash Overlay */}
+                    <motion.div 
+                      initial={{ opacity: 0.4 }}
+                      animate={{ opacity: [0.4, 0.8, 0.4] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute inset-0 bg-primary clip-x-slash mix-blend-screen shadow-[0_0_20px_#00bfff]"
+                    />
+                  </div>
+
+                  {/* The North Star Dot */}
+                  <motion.div 
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="absolute -top-1 left-[40%] w-1 h-1 rounded-full bg-primary shadow-[0_0_8px_#00bfff]"
+                  />
                 </div>
               </motion.div>
             </Link>
@@ -144,35 +163,6 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Desktop Mini Nav - Show on scroll or always? Let's show it subtly on scroll */}
-        <AnimatePresence>
-          {isScrolled && (
-            <motion.nav 
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="hidden lg:flex justify-center gap-8 mt-2 pt-2 border-t border-white/5"
-            >
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className={`text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative group ${
-                    isActive(item.path) ? 'text-primary' : 'text-gray-500 hover:text-white'
-                  }`}
-                >
-                  {item.name}
-                  <motion.span 
-                    className="absolute -bottom-1 left-0 h-[1px] bg-primary"
-                    initial={{ width: 0 }}
-                    animate={{ width: isActive(item.path) ? '100%' : 0 }}
-                    whileHover={{ width: '100%' }}
-                  />
-                </Link>
-              ))}
-            </motion.nav>
-          )}
-        </AnimatePresence>
 
         {/* Mobile Menu Overlay */}
         <AnimatePresence>

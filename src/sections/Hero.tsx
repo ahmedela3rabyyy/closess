@@ -43,7 +43,7 @@ export default function Hero() {
       >
         <img 
           src="/hero-group.jpg" 
-          alt="COVE Fashion Collection"
+          alt="NYX Fashion Collection"
           className="w-full h-full object-cover object-top"
         />
         
@@ -104,7 +104,7 @@ export default function Hero() {
           variants={itemVariants}
           className="text-white text-6xl md:text-8xl lg:text-[10rem] font-black uppercase tracking-tighter text-center leading-[0.8] mb-8"
         >
-          <span className="block italic text-primary drop-shadow-[0_0_30px_rgba(0,191,255,0.3)]">COVE</span>
+          <span className="block italic text-primary drop-shadow-[0_0_30px_rgba(0,191,255,0.3)]">NYX</span>
           <span className="block">STUDIO</span>
         </motion.h1>
 

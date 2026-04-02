@@ -12,7 +12,7 @@ export default function About() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#00bfff]/20 to-black" />
           <div className="relative z-10 text-center px-4">
             <h1 className="text-white text-4xl md:text-6xl font-bold uppercase tracking-wider mb-4">
-              About COVE
+              About NYX
             </h1>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
               Redefining modern fashion with comfort, style, and sustainability
@@ -31,8 +31,9 @@ export default function About() {
                 Born from a Passion for Quality
               </h3>
               <p className="text-gray-400 leading-relaxed mb-4">
-                COVE was founded in 2020 with a simple mission: to create clothing 
-                that feels as good as it looks. We believe that true style comes 
+                NYX was founded in 2020 with a simple mission: to create clothing 
+                that combines minimalist architectural design with premium luxury.
+                We believe that true style comes 
                 from confidence, and confidence comes from comfort.
               </p>
               <p className="text-gray-400 leading-relaxed">
@@ -42,7 +43,7 @@ export default function About() {
               </p>
             </div>
             <div className="aspect-square bg-gradient-to-br from-[#00bfff]/30 to-purple-500/30 rounded-lg flex items-center justify-center">
-              <span className="text-6xl font-bold text-white/20">COVE</span>
+              <span className="text-6xl font-bold text-white/20">NYX</span>
             </div>
           </div>
         </section>

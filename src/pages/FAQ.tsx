@@ -47,9 +47,9 @@ const faqData: FAQItem[] = [
     category: 'Products',
   },
   {
-    question: 'How do I care for my COVE garments?',
+    question: 'How do I care for my NYX garments?',
     answer:
-      'Care instructions are included on the label of each garment. Generally, we recommend washing in cold water, air drying when possible, and avoiding bleach to maintain the quality and longevity of your items.',
+      'We recommend hand washing or machine washing on a gentle cycle with cold water for most NYX items. Always check the care label on each garment for specific instructions to maintain the quality and longevity of your pieces.',
     category: 'Products',
   },
   {
@@ -61,13 +61,13 @@ const faqData: FAQItem[] = [
   {
     question: 'Do you offer gift cards?',
     answer:
-      'Yes! Digital gift cards are available in denominations from $25 to $500. They are delivered via email and never expire. Perfect for gifting the COVE experience to friends and family.',
+      'Yes! Digital gift cards are available in denominations from $25 to $500. They are delivered via email and never expire. Perfect for gifting the NYX experience to friends and family.',
     category: 'Orders',
   },
   {
     question: 'How do I contact customer service?',
     answer:
-      'You can reach our customer service team via email at support@cove.com, by phone at +1 (555) 123-4567, or through the contact form on our website. We aim to respond within 24 hours.',
+      'You can reach our customer service team via email at support@nyx.com, by phone at +1 (555) 123-4567, or through the contact form on our website. We aim to respond within 24 hours.',
     category: 'General',
   },
 ];

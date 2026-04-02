@@ -49,7 +49,7 @@ export default function Home() {
                 Why Choose Us
               </span>
               <h2 className="text-white text-3xl font-bold uppercase mt-2">
-                The COVE Experience
+                The NYX Experience
               </h2>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
@@ -97,7 +97,7 @@ export default function Home() {
               Stay Updated
             </span>
             <h2 className="text-white text-3xl md:text-4xl font-bold uppercase mt-2 mb-4">
-              Join the COVE Community
+              Join the NYX Community
             </h2>
             <p className="text-gray-400 mb-8">
               Subscribe to get exclusive offers, early access to new arrivals, and style tips.

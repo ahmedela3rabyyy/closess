@@ -104,6 +104,10 @@ html {
   transform: scale(1);
 }
 
+.clip-x-slash {
+  clip-path: polygon(20% 0%, 100% 80%, 80% 100%, 0% 20%);
+}
+
 /* Card Hover Effects */
 .card-premium {
   @apply bg-neutral-900/40 border border-white/5 rounded-2xl overflow-hidden transition-all duration-500;
