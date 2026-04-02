@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, Instagram, Facebook, Twitter } from 'lucide-react';
 import Header from '../sections/Header';
 import Footer from '../sections/Footer';

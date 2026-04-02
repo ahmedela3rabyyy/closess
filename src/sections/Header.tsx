@@ -31,10 +31,6 @@ export default function Header() {
     { name: 'SALE', path: '/shop?sale=true' },
   ];
 
-  const isActive = (path: string) => {
-    if (path === '/shop') return location.pathname === '/shop';
-    return location.search.includes(path.split('?')[1] || '');
-  };
 
   return (
     <>

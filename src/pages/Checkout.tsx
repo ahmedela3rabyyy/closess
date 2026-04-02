@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, CreditCard, Truck, Check, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
