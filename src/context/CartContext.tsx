@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 
 export interface CartItem {
   id: number;
@@ -25,8 +25,22 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(() => {
+    // Load from localStorage on initialization
+    try {
+      const saved = localStorage.getItem('nyx_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Sync to localStorage on changes
+  useEffect(() => {
+    localStorage.setItem('nyx_cart', JSON.stringify(items));
+  }, [items]);
 
   const addToCart = useCallback((newItem: Omit<CartItem, 'quantity'>, quantity: number) => {
     setItems(prev => {

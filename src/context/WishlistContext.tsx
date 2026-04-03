@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 
 export interface WishlistItem {
   id: number;
@@ -20,7 +20,20 @@ interface WishlistContextType {
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 export function WishlistProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<WishlistItem[]>([]);
+  const [items, setItems] = useState<WishlistItem[]>(() => {
+    // Load from localStorage on initialization
+    try {
+      const saved = localStorage.getItem('nyx_wishlist');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  // Sync to localStorage on any change to the items
+  useEffect(() => {
+    localStorage.setItem('nyx_wishlist', JSON.stringify(items));
+  }, [items]);
 
   const addToWishlist = useCallback((newItem: WishlistItem) => {
     setItems(prev => {

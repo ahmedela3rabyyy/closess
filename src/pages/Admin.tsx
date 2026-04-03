@@ -92,10 +92,10 @@ export default function Admin() {
     const pendingOrders = orders.filter(o => o.status === 'pending').length;
     
     return [
-      { label: 'Net Revenue', value: `${settings.currency} ${totalRevenue.toLocaleString()}`, icon: TrendingUp, color: 'text-primary', grow: '+12.5%' },
-      { label: 'Total Orders', value: orders.length, icon: ShoppingBag, color: 'text-green-500', grow: '+8.2%' },
-      { label: 'Pending Logistics', value: pendingOrders, icon: History, color: 'text-yellow-500', grow: 'Priority' },
-      { label: 'Restock Alerts', value: lowStockCount, icon: AlertCircle, color: 'text-red-500', grow: 'Action Required' },
+      { label: 'صافي الأرباح', value: `${settings.currency} ${totalRevenue.toLocaleString()}`, icon: TrendingUp, color: 'text-primary', grow: '+12.5%' },
+      { label: 'إجمالي الطلبات', value: orders.length, icon: ShoppingBag, color: 'text-green-500', grow: '+8.2%' },
+      { label: 'طلبات قيد المعالجة', value: pendingOrders, icon: History, color: 'text-yellow-500', grow: 'Priority' },
+      { label: 'تنبيهات المخزون', value: lowStockCount, icon: AlertCircle, color: 'text-red-500', grow: 'Action Required' },
     ];
   }, [orders, products, settings.currency]);
 
@@ -227,10 +227,10 @@ export default function Admin() {
                 <p className="text-[8px] font-black uppercase tracking-[0.5em] text-gray-500">Navigation Hub</p>
               </div>
               {[
-                { id: 'dashboard', label: 'Command Center', icon: LayoutDashboard },
-                { id: 'products', label: 'Ecosystem', icon: ShoppingBag },
-                { id: 'orders', label: 'Live Orders', icon: History },
-                { id: 'settings', label: 'Framework', icon: SettingsIcon },
+                { id: 'dashboard', label: 'مركز القيادة', icon: LayoutDashboard },
+                { id: 'products', label: 'إدارة المنتجات', icon: ShoppingBag },
+                { id: 'orders', label: 'الطلبات المباشرة', icon: History },
+                { id: 'settings', label: 'إعدادات المنصة', icon: SettingsIcon },
               ].map((item: any) => (
                 <button
                   key={item.id}
@@ -269,7 +269,9 @@ export default function Admin() {
                    <p className="text-primary text-[10px] font-black uppercase tracking-[0.4em]">ADMINISTRATOR v2.4</p>
                 </div>
                 <h1 className="text-white text-4xl font-black italic uppercase tracking-tighter">
-                  {activeTab === 'dashboard' ? 'Command Center' : activeTab.toUpperCase()}
+                  {activeTab === 'dashboard' ? 'مركز القيادة' : 
+                   activeTab === 'products' ? 'إدارة المنتجات' : 
+                   activeTab === 'orders' ? 'الطلبات المباشرة' : 'إعدادات المنصة'}
                 </h1>
               </div>
               
@@ -405,11 +407,11 @@ export default function Admin() {
                   <table className="w-full text-left">
                     <thead>
                       <tr className="bg-neutral-950/40 text-gray-500">
-                        <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">Ecosystem Entry</th>
-                        <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">Category</th>
-                        <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">Valuation</th>
-                        <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">Stock Status</th>
-                        <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase text-right">Operations</th>
+                        <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">المنتج</th>
+                        <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">الفئة</th>
+                        <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">السعر</th>
+                        <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">حالة المخزون</th>
+                        <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase text-right">العمليات</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
@@ -477,11 +479,11 @@ export default function Admin() {
                    <table className="w-full text-left">
                       <thead>
                         <tr className="bg-neutral-950/40 text-gray-500">
-                          <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">Ref ID</th>
-                          <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">Client Identity</th>
-                          <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">Revenue Unit</th>
-                          <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">Protocol Status</th>
-                          <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase text-right">Operations</th>
+                          <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">الرقم المرجعي</th>
+                          <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">بيانات العميل</th>
+                          <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">القيمة</th>
+                          <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase">حالة الطلب</th>
+                          <th className="px-8 py-6 text-[9px] font-black tracking-[0.4em] uppercase text-right">العمليات</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-white/5">
@@ -521,7 +523,16 @@ export default function Admin() {
                                  <div className="flex items-center justify-end gap-3">
                                     <button 
                                       onClick={() => {
-                                        const msg = `*NYX Update* \n\nأهلاً ${order.customerName}، يسعدنا إبلاغك أن طلبك [${order.id}] حالته الآن: ${order.status.toUpperCase()}.`;
+                                        const statusMap: Record<string, string> = {
+                                          pending: 'قيد المراجعة',
+                                          shipped: 'تم الشحن',
+                                          delivered: 'تم التوصيل',
+                                          cancelled: 'ملغي'
+                                        };
+                                        const arabicStatus = statusMap[order.status as keyof typeof statusMap] || order.status;
+                                        const msg = `*تحديث من NYX Studio 🌌*\n\n` +
+                                          `عزيزنا *${order.customerName}*، نود إبلاغك بأن طلبك رقم [${order.id}] حالته الآن: *${arabicStatus}*.\n\n` +
+                                          `نحن نعمل على تجهيز قطعتك الفريدة بكل إتقان. شكراً لاختيارك NYX.`;
                                         window.open(`https://wa.me/${order.phone.startsWith('+') ? order.phone : '+20'+order.phone.replace(/^0/, '')}?text=${encodeURIComponent(msg)}`, '_blank');
                                       }}
                                       className="px-4 py-2 bg-green-500/10 text-green-500 border border-green-500/20 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-green-500 hover:text-black transition-all"
@@ -559,10 +570,10 @@ export default function Admin() {
                   <div className="lg:col-span-3 bg-black/40 border-r border-white/5 p-8 space-y-2">
                      <p className="text-[8px] font-black uppercase tracking-[0.4em] text-gray-600 mb-6 px-4">Framework Layers</p>
                      {[
-                       { id: 'main', label: 'Protocol Core', icon: LayoutDashboard },
-                       { id: 'social', label: 'Ecosystem Links', icon: ShoppingBag },
-                       { id: 'contact', label: 'Contact Hub', icon: History },
-                       { id: 'security', label: 'Security Ops', icon: Lock },
+                       { id: 'main', label: 'الإعدادات الأساسية', icon: LayoutDashboard },
+                       { id: 'social', label: 'روابط السوشيال ميديا', icon: ShoppingBag },
+                       { id: 'contact', label: 'معلومات التواصل', icon: History },
+                       { id: 'security', label: 'الأمان والوصول', icon: Lock },
                      ].map((sub) => (
                        <button
                          key={sub.id}
