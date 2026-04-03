@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Instagram, Facebook, Twitter } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
+import { useSettings } from '../context/SettingsContext';
 import Header from '../sections/Header';
 import Footer from '../sections/Footer';
 
 export default function Contact() {
+  const { settings } = useSettings();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -71,7 +73,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="text-white font-medium mb-1">Email</h3>
-                    <p className="text-gray-400">support@nyx.com</p>
+                    <p className="text-gray-400">{settings.email}</p>
                     <p className="text-gray-500 text-sm">We reply within 24 hours</p>
                   </div>
                 </div>
@@ -82,8 +84,8 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="text-white font-medium mb-1">Phone</h3>
-                    <p className="text-gray-400">+1 (555) 123-4567</p>
-                    <p className="text-gray-500 text-sm">Mon-Fri, 9am-6pm EST</p>
+                    <p className="text-gray-400">{settings.phone}</p>
+                    <p className="text-gray-500 text-sm">Customer Support Protocol Active</p>
                   </div>
                 </div>
 
@@ -93,9 +95,8 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="text-white font-medium mb-1">Address</h3>
-                    <p className="text-gray-400">
-                      123 Fashion Avenue<br />
-                      New York, NY 10001
+                    <p className="text-gray-400 whitespace-pre-line">
+                      {settings.address}
                     </p>
                   </div>
                 </div>
@@ -105,24 +106,22 @@ export default function Contact() {
               <div>
                 <h3 className="text-white font-medium mb-4">Follow Us</h3>
                 <div className="flex gap-4">
-                  <a
-                    href="#"
-                    className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:bg-[#00bfff] hover:text-black transition-all"
-                  >
-                    <Instagram size={24} />
-                  </a>
-                  <a
-                    href="#"
-                    className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:bg-[#00bfff] hover:text-black transition-all"
-                  >
-                    <Facebook size={24} />
-                  </a>
-                  <a
-                    href="#"
-                    className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:bg-[#00bfff] hover:text-black transition-all"
-                  >
-                    <Twitter size={24} />
-                  </a>
+                  {[
+                    { icon: Instagram, href: settings.instagram },
+                    { icon: Facebook, href: settings.facebook },
+                    { icon: Twitter, href: settings.twitter },
+                    { icon: Youtube, href: settings.youtube }
+                  ].filter(social => social.href).map((social, i) => (
+                    <a
+                      key={i}
+                      href={social.href}
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:bg-[#00bfff] hover:text-black transition-all"
+                    >
+                      <social.icon size={24} />
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>

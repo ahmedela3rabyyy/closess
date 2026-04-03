@@ -1,14 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart, ShoppingBag, Eye, Star, ArrowRight } from 'lucide-react';
-import { products } from '../data/products';
+import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { useSettings } from '../context/SettingsContext';
 
 export default function Products() {
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { settings } = useSettings();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { products } = useProducts();
 
   // Get only first 4 products for homepage
   const featuredProducts = products.slice(0, 4);
@@ -41,7 +44,7 @@ export default function Products() {
       subtitle: product.subtitle,
       image: product.image,
       price: product.price,
-    });
+    }, 1);
   };
 
   const handleToggleWishlist = (product: (typeof products)[0], e: React.MouseEvent) => {
@@ -74,7 +77,7 @@ export default function Products() {
               NEW <span className="italic text-primary">ARRIVALS</span>
             </h2>
             <p className="text-gray-500 mt-6 text-sm md:text-base max-w-md font-medium uppercase tracking-widest leading-relaxed">
-              Experience the pinnacle of knitwear design. Crafted for the modern minimalist.
+              On all orders over {settings.currency} {settings.shippingThreshold}. Experience the pinnacle of knitwear design.
             </p>
           </div>
           <motion.button
@@ -196,10 +199,10 @@ export default function Products() {
                     <span className="text-gray-600 text-[10px] font-bold ml-1">({product.reviews})</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-white font-black text-lg tracking-tight">${product.price}</span>
+                    <span className="text-white font-black text-lg tracking-tight">{settings.currency} {product.price}</span>
                     {product.originalPrice && (
                       <span className="text-gray-600 text-sm line-through font-bold">
-                        ${product.originalPrice}
+                        {settings.currency} {product.originalPrice}
                       </span>
                     )}
                   </div>

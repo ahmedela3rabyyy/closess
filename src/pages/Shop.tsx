@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, ShoppingBag, Filter, ChevronDown } from 'lucide-react';
-import { products, getProductsByCategory } from '../data/products';
+import { useSettings } from '../context/SettingsContext';
+import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import Header from '../sections/Header';
@@ -24,30 +25,38 @@ const sortOptions = [
 export default function Shop() {
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { settings } = useSettings();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { products } = useProducts();
 
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [showSortDropdown, setShowSortDropdown] = useState(false);
 
-  let filteredProducts = getProductsByCategory(selectedCategory);
+  // Filter products by category
+  const getFilteredProducts = () => {
+    let filtered = selectedCategory === 'all' 
+      ? products 
+      : products.filter(p => p.category === selectedCategory);
 
-  // Sort products
-  filteredProducts = [...filteredProducts].sort((a, b) => {
-    switch (sortBy) {
-      case 'price-low':
-        return a.price - b.price;
-      case 'price-high':
-        return b.price - a.price;
-      case 'name':
-        return a.name.localeCompare(b.name);
-      case 'newest':
-      default:
-        return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
-    }
-  });
+    return [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'price-low':
+          return a.price - b.price;
+        case 'price-high':
+          return b.price - a.price;
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'newest':
+        default:
+          return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
+      }
+    });
+  };
 
-  const handleAddToCart = (product: (typeof products)[0], e: React.MouseEvent) => {
+  const filteredProducts = getFilteredProducts();
+
+  const handleAddToCart = (product: any, e: React.MouseEvent) => {
     e.stopPropagation();
     if (product.soldOut) return;
     addToCart({
@@ -56,10 +65,10 @@ export default function Shop() {
       subtitle: product.subtitle,
       image: product.image,
       price: product.price,
-    });
+    }, 1);
   };
 
-  const handleToggleWishlist = (product: (typeof products)[0], e: React.MouseEvent) => {
+  const handleToggleWishlist = (product: any, e: React.MouseEvent) => {
     e.stopPropagation();
     toggleWishlist({
       id: product.id,
@@ -225,11 +234,11 @@ export default function Shop() {
                     </p>
                     <div className="flex items-center gap-2 mt-2">
                       <span className="text-[#00bfff] font-bold">
-                        ${product.price}
+                        {settings.currency} {product.price}
                       </span>
                       {product.originalPrice && (
-                        <span className="text-gray-500 text-sm line-through">
-                          ${product.originalPrice}
+                        <span className="text-gray-600 text-[10px] line-through font-bold">
+                          {settings.currency} {product.originalPrice}
                         </span>
                       )}
                     </div>

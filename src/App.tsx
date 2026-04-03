@@ -14,6 +14,8 @@ import FAQ from './pages/FAQ';
 import Checkout from './pages/Checkout';
 import Wishlist from './pages/Wishlist';
 import Auth from './pages/Auth';
+import Maintenance from './pages/Maintenance';
+import { useSettings } from './context/SettingsContext';
 
 const PageWrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -26,9 +28,39 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => (
   </motion.div>
 );
 
+import { ProductProvider } from './context/ProductContext';
+import { OrderProvider } from './context/OrderContext';
+import { SettingsProvider } from './context/SettingsContext';
+import Admin from './pages/Admin';
+
+function App() {
+  return (
+    <ProductProvider>
+      <OrderProvider>
+        <SettingsProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <Router>
+                <AppRoutes />
+                <CartDrawer />
+              </Router>
+            </WishlistProvider>
+          </CartProvider>
+        </SettingsProvider>
+      </OrderProvider>
+    </ProductProvider>
+  );
+}
+
 function AppRoutes() {
   const location = useLocation();
-  
+  const { settings } = useSettings();
+
+  // Maintenance Mode Logic
+  const isAdminPath = location.pathname.startsWith('/admin');
+  if (settings.maintenanceMode && !isAdminPath) {
+    return <Maintenance />;
+  }
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
@@ -41,21 +73,9 @@ function AppRoutes() {
         <Route path="/checkout" element={<PageWrapper><Checkout /></PageWrapper>} />
         <Route path="/wishlist" element={<PageWrapper><Wishlist /></PageWrapper>} />
         <Route path="/auth" element={<PageWrapper><Auth /></PageWrapper>} />
+        <Route path="/admin" element={<PageWrapper><Admin /></PageWrapper>} />
       </Routes>
     </AnimatePresence>
-  );
-}
-
-function App() {
-  return (
-    <CartProvider>
-      <WishlistProvider>
-        <Router>
-          <AppRoutes />
-          <CartDrawer />
-        </Router>
-      </WishlistProvider>
-    </CartProvider>
   );
 }
 

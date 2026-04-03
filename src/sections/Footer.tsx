@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, Twitter, Mail, MapPin, Phone, ArrowUpRight, Youtube } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useSettings } from '../context/SettingsContext';
 
 export default function Footer() {
+  const { settings } = useSettings();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -37,14 +39,16 @@ export default function Footer() {
             {/* Social Icons */}
             <div className="flex gap-3">
               {[
-                { icon: Instagram, href: '#' },
-                { icon: Facebook, href: '#' },
-                { icon: Twitter, href: '#' },
-                { icon: Youtube, href: '#' },
-              ].map((social, i) => (
+                { icon: Instagram, href: settings.instagram },
+                { icon: Facebook, href: settings.facebook },
+                { icon: Twitter, href: settings.twitter },
+                { icon: Youtube, href: settings.youtube },
+              ].filter(social => social.href).map((social, i) => (
                 <motion.a
                   key={i}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ y: -5, backgroundColor: '#00bfff', color: '#000000' }}
                   className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-500 transition-all"
                 >
@@ -116,22 +120,21 @@ export default function Footer() {
                 <div className="w-8 h-8 bg-[#00bfff]/10 rounded-lg flex items-center justify-center flex-shrink-0">
                   <MapPin size={16} className="text-[#00bfff]" />
                 </div>
-                <span className="text-gray-400 text-sm">
-                  123 Fashion Avenue<br />
-                  New York, NY 10001
+                <span className="text-gray-400 text-sm whitespace-pre-line">
+                  {settings.address}
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-[#00bfff]/10 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Phone size={16} className="text-[#00bfff]" />
                 </div>
-                <span className="text-gray-400 text-sm">+1 (555) 123-4567</span>
+                <span className="text-gray-400 text-sm">{settings.phone}</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-[#00bfff]/10 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Mail size={16} className="text-[#00bfff]" />
                 </div>
-                <span className="text-gray-400 text-sm">support@nyx.com</span>
+                <span className="text-gray-400 text-sm">{settings.email}</span>
               </li>
             </ul>
           </div>

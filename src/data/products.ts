@@ -1,3 +1,6 @@
+export const STANDARD_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'] as const;
+export type Size = typeof STANDARD_SIZES[number];
+
 export interface Product {
   id: number;
   name: string;
@@ -15,6 +18,10 @@ export interface Product {
   isSale?: boolean;
   rating: number;
   reviews: number;
+  sizeStock: Record<string, number>;
+  seoTitle?: string;
+  seoDescription?: string;
+  discountPercentage?: number;
 }
 
 export const products: Product[] = [
@@ -30,10 +37,11 @@ export const products: Product[] = [
     category: 'men',
     sizes: ['S', 'M', 'L', 'XL'],
     colors: [{ name: 'Baby Blue', hex: '#87CEEB' }],
-    soldOut: true,
+    soldOut: false,
     isSale: true,
     rating: 4.8,
     reviews: 124,
+    sizeStock: { 'S': 5, 'M': 5, 'L': 5, 'XL': 0 },
   },
   {
     id: 2,
@@ -47,10 +55,11 @@ export const products: Product[] = [
     category: 'men',
     sizes: ['S', 'M', 'L', 'XL'],
     colors: [{ name: 'Pastel Pink', hex: '#FFB6C1' }],
-    soldOut: true,
+    soldOut: false,
     isSale: true,
     rating: 4.7,
     reviews: 98,
+    sizeStock: { 'S': 2, 'M': 3, 'L': 5, 'XL': 10 },
   },
   {
     id: 3,
@@ -67,6 +76,7 @@ export const products: Product[] = [
     isNew: true,
     rating: 4.9,
     reviews: 67,
+    sizeStock: { 'XS': 10, 'S': 10, 'M': 10, 'L': 10 },
   },
   {
     id: 4,
@@ -82,6 +92,7 @@ export const products: Product[] = [
     soldOut: false,
     rating: 4.6,
     reviews: 45,
+    sizeStock: { 'S': 5, 'M': 5, 'L': 5, 'XL': 5 },
   },
   {
     id: 5,
@@ -97,6 +108,7 @@ export const products: Product[] = [
     soldOut: false,
     rating: 4.5,
     reviews: 234,
+    sizeStock: { 'One Size': 20 },
   },
   {
     id: 6,
@@ -113,6 +125,7 @@ export const products: Product[] = [
     isNew: true,
     rating: 4.8,
     reviews: 89,
+    sizeStock: { 'One Size': 15 },
   },
 ];
 

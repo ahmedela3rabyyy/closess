@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Search, X, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { searchProducts } from '../data/products';
+import { useProducts } from '../context/ProductContext';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -12,9 +12,15 @@ interface SearchModalProps {
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
+  const { products } = useProducts();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const results = query.length >= 2 ? searchProducts(query) : [];
+  const results = query.length >= 2 
+    ? products.filter(p => 
+        p.name.toLowerCase().includes(query.toLowerCase()) ||
+        p.subtitle.toLowerCase().includes(query.toLowerCase())
+      ) 
+    : [];
 
   useEffect(() => {
     if (isOpen && inputRef.current) {

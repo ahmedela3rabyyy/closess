@@ -1,11 +1,14 @@
 import { Truck, RefreshCw, ShieldCheck, Sparkles, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useSettings } from '../context/SettingsContext';
 import Header from '../sections/Header';
 import Hero from '../sections/Hero';
 import Products from '../sections/Products';
 import Footer from '../sections/Footer';
 
 export default function Home() {
+  const { settings } = useSettings();
+
   return (
     <div className="min-h-screen bg-black">
       <Header />
@@ -56,7 +59,7 @@ export default function Home() {
               {[
                 {
                   title: 'Free Shipping',
-                  description: 'On all orders over $100. Fast and reliable delivery worldwide.',
+                  description: `On all orders over ${settings.currency} ${settings.shippingThreshold}. Fast and reliable delivery across Egypt.`,
                   icon: Truck,
                 },
                 {

@@ -1,6 +1,9 @@
 import { X, Plus, Minus, ShoppingBag, Trash2, ArrowRight, Sparkles } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useProducts } from '../context/ProductContext';
+import { useSettings } from '../context/SettingsContext';
+import { toast } from 'sonner';
 
 export default function CartDrawer() {
   const navigate = useNavigate();
@@ -9,16 +12,20 @@ export default function CartDrawer() {
     removeFromCart,
     updateQuantity,
     totalItems,
-    totalPrice,
     isCartOpen,
     setIsCartOpen,
     clearCart,
   } = useCart();
+  const { products } = useProducts();
+  const { settings } = useSettings();
+
+  const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const shippingThreshold = settings.shippingThreshold;
+  const shippingCost = totalPrice >= shippingThreshold ? 0 : settings.shippingOutside;
+  const total = totalPrice + shippingCost;
+  const isFreeShipping = totalPrice >= shippingThreshold;
 
   if (!isCartOpen) return null;
-
-  const shippingCost = totalPrice >= 100 ? 0 : 10;
-  const total = totalPrice + shippingCost;
 
   return (
     <>
@@ -81,7 +88,7 @@ export default function CartDrawer() {
             <div className="space-y-4">
               {items.map((item) => (
                 <div
-                  key={item.id}
+                  key={`${item.id}-${item.size}`}
                   className="flex gap-4 bg-gray-900/50 border border-gray-800 p-4 rounded-xl hover:border-gray-700 transition-colors"
                 >
                   {/* Product Image */}
@@ -110,7 +117,7 @@ export default function CartDrawer() {
                         )}
                       </div>
                       <button
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => removeFromCart(item.id, item.size)}
                         className="w-8 h-8 bg-gray-800 hover:bg-red-500/20 text-gray-500 hover:text-red-500 rounded-lg flex items-center justify-center transition-all flex-shrink-0"
                       >
                         <Trash2 size={14} />
@@ -125,7 +132,7 @@ export default function CartDrawer() {
                       <div className="flex items-center gap-1 bg-gray-800 rounded-lg p-1">
                         <button
                           onClick={() =>
-                            updateQuantity(item.id, item.quantity - 1)
+                            updateQuantity(item.id, item.size, item.quantity - 1)
                           }
                           className="w-7 h-7 bg-gray-700 hover:bg-gray-600 text-white rounded-md flex items-center justify-center transition-colors"
                         >
@@ -135,10 +142,24 @@ export default function CartDrawer() {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() =>
-                            updateQuantity(item.id, item.quantity + 1)
-                          }
-                          className="w-7 h-7 bg-gray-700 hover:bg-gray-600 text-white rounded-md flex items-center justify-center transition-colors"
+                          onClick={() => {
+                            const product = products.find(p => p.id === item.id);
+                            const availableStock = product?.sizeStock[item.size || 'One Size'] || 0;
+                            if (product && item.quantity < availableStock) {
+                              updateQuantity(item.id, item.size, item.quantity + 1);
+                            } else {
+                              toast.error(`Max stock reached for size ${item.size}: ${item.quantity} pieces`);
+                            }
+                          }}
+                          className={`w-7 h-7 rounded-md flex items-center justify-center transition-colors ${
+                            (() => {
+                              const product = products.find(p => p.id === item.id);
+                              const availableStock = product?.sizeStock[item.size || 'One Size'] || 0;
+                              return product && item.quantity >= availableStock 
+                                ? 'bg-gray-800 text-gray-600 cursor-not-allowed' 
+                                : 'bg-gray-700 hover:bg-gray-600 text-white'
+                            })()
+                          }`}
                         >
                           <Plus size={12} />
                         </button>
@@ -146,7 +167,7 @@ export default function CartDrawer() {
 
                       {/* Price */}
                       <p className="text-[#00bfff] font-bold">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {settings.currency} {(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -160,18 +181,20 @@ export default function CartDrawer() {
         {items.length > 0 && (
           <div className="border-t border-gray-800 p-6 bg-gradient-to-t from-gray-950 to-gray-900">
             {/* Free Shipping Banner */}
-            {totalPrice < 100 && (
+            {totalPrice < shippingThreshold && (
               <div className="mb-4 p-3 bg-[#00bfff]/10 border border-[#00bfff]/30 rounded-xl">
                 <div className="flex items-center gap-2 text-[#00bfff]">
                   <Sparkles size={16} />
-                  <span className="text-sm">
-                    Add ${(100 - totalPrice).toFixed(2)} more for free shipping!
-                  </span>
+                  {!isFreeShipping && (
+                    <p className="text-[#00bfff] text-[10px] font-black uppercase tracking-widest text-center mt-2">
+                      Add {settings.currency} {(shippingThreshold - totalPrice).toFixed(2)} more for free shipping!
+                    </p>
+                  )}
                 </div>
                 <div className="mt-2 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                   <div 
                     className="h-full bg-[#00bfff] rounded-full transition-all"
-                    style={{ width: `${Math.min((totalPrice / 100) * 100, 100)}%` }}
+                    style={{ width: `${Math.min((totalPrice / shippingThreshold) * 100, 100)}%` }}
                   />
                 </div>
               </div>
@@ -181,18 +204,18 @@ export default function CartDrawer() {
             <div className="space-y-2 mb-4">
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-400">Subtotal</span>
-                <span className="text-white">${totalPrice.toFixed(2)}</span>
+                <span className="text-white">{settings.currency} {totalPrice.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-gray-400">Shipping</span>
-                <span className={shippingCost === 0 ? 'text-green-400' : 'text-white'}>
-                  {shippingCost === 0 ? 'Free' : `$${shippingCost.toFixed(2)}`}
+              <div className="flex justify-between text-xs mb-2">
+                <span className="text-gray-500 uppercase tracking-widest">Est. Shipping</span>
+                <span className="text-gray-500 uppercase tracking-widest">
+                  {shippingCost === 0 ? 'Free' : `${settings.currency} ${shippingCost.toFixed(2)}`}
                 </span>
               </div>
-              <div className="flex justify-between items-center pt-3 border-t border-gray-800">
-                <span className="text-white font-bold text-lg">Total</span>
-                <span className="text-[#00bfff] font-bold text-xl">
-                  ${total.toFixed(2)}
+              <div className="flex justify-between text-xl font-black italic tracking-tighter border-t border-white/10 pt-4 mb-6">
+                <span className="text-white uppercase tracking-tighter italic">Total</span>
+                <span className="text-[#00bfff] italic">
+                  {settings.currency} {total.toFixed(2)}
                 </span>
               </div>
             </div>
