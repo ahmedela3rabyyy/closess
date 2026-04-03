@@ -19,6 +19,7 @@ import { useSettings } from './context/SettingsContext';
 
 const PageWrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
+    className="relative"
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
@@ -32,6 +33,15 @@ import { ProductProvider } from './context/ProductContext';
 import { OrderProvider } from './context/OrderContext';
 import { SettingsProvider } from './context/SettingsContext';
 import Admin from './pages/Admin';
+import { useEffect } from 'react';
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
 
 function App() {
   return (
@@ -41,6 +51,7 @@ function App() {
           <CartProvider>
             <WishlistProvider>
               <Router>
+                <ScrollToTop />
                 <AppRoutes />
                 <CartDrawer />
               </Router>

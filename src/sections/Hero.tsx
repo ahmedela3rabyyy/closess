@@ -89,12 +89,12 @@ export default function Hero() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="relative z-10 flex flex-col items-center justify-center min-h-screen responsive-container pt-20"
+        className="relative z-10 flex flex-col items-center justify-center min-h-screen responsive-container pt-24 md:pt-32 lg:pt-20"
       >
         {/* Badge */}
-        <motion.div variants={itemVariants} className="mb-8">
-          <span className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-md border border-white/10 text-white px-6 py-2.5 rounded-full text-[10px] md:text-sm uppercase tracking-[0.4em] font-bold">
-            <span className="w-2 h-2 bg-primary rounded-full animate-ping" />
+        <motion.div variants={itemVariants} className="mb-6 md:mb-8 lg:mt-12">
+          <span className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-md border border-white/10 text-white px-5 py-2 md:px-6 md:py-2.5 rounded-full text-[9px] md:text-sm uppercase tracking-[0.4em] font-bold">
+            <span className="w-1.5 h-1.5 bg-primary rounded-full animate-ping" />
             Collection 2026
           </span>
         </motion.div>
@@ -102,7 +102,7 @@ export default function Hero() {
         {/* Main Title */}
         <motion.h1 
           variants={itemVariants}
-          className="text-white text-6xl md:text-8xl lg:text-[10rem] font-black uppercase tracking-tighter text-center leading-[0.8] mb-8"
+          className="text-white text-5xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black uppercase tracking-tighter text-center leading-[0.85] mb-8"
         >
           <span className="block italic text-primary drop-shadow-[0_0_30px_rgba(0,191,255,0.3)]">NYX</span>
           <span className="block">STUDIO</span>

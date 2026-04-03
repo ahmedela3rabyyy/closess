@@ -10,9 +10,9 @@ export default function Footer() {
   return (
     <footer className="bg-black pt-20 pb-10 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 md:gap-12 mb-16">
           {/* Logo & Description */}
-          <div className="col-span-2 space-y-8">
+          <div className="sm:col-span-2 space-y-6 md:space-y-8">
             <Link to="/" className="group inline-flex items-center">
               <div className="relative flex items-center">
                 {/* The "NY" - Sleek and High-end */}
@@ -33,11 +33,11 @@ export default function Footer() {
                 <div className="absolute -top-2 left-[40%] w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_12px_#00bfff]" />
               </div>
             </Link>
-            <p className="text-gray-500 leading-relaxed max-w-xs font-medium italic">
+            <p className="text-gray-500 leading-relaxed max-w-xs font-medium italic text-sm md:text-base">
               "Architectural Minimalism • Midnight Luxury"
             </p>
             {/* Social Icons */}
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               {[
                 { icon: Instagram, href: settings.instagram },
                 { icon: Facebook, href: settings.facebook },
@@ -50,20 +50,21 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   whileHover={{ y: -5, backgroundColor: '#00bfff', color: '#000000' }}
-                  className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-500 transition-all"
+                  whileTap={{ scale: 0.95 }}
+                  className="w-9 h-9 md:w-10 md:h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-500 transition-all"
                 >
-                  <social.icon size={18} />
+                  <social.icon size={16} className="md:w-5 md:h-5" />
                 </motion.a>
               ))}
             </div>
           </div>
 
           {/* Shop Links */}
-          <div>
-            <h3 className="text-white font-bold uppercase mb-6 text-sm tracking-wider">
+          <div className="space-y-4">
+            <h3 className="text-white font-bold uppercase mb-4 md:mb-6 text-xs md:text-sm tracking-wider">
               Shop
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2 md:space-y-3 text-sm">
               {[
                 { name: 'All Products', path: '/shop' },
                 { name: 'Men', path: '/shop?category=men' },
@@ -77,7 +78,7 @@ export default function Footer() {
                     className="group text-gray-400 hover:text-[#00bfff] transition-colors flex items-center gap-1"
                   >
                     {link.name}
-                    <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                   </Link>
                 </li>
               ))}
@@ -85,11 +86,11 @@ export default function Footer() {
           </div>
 
           {/* Support Links */}
-          <div>
-            <h3 className="text-white font-bold uppercase mb-6 text-sm tracking-wider">
+          <div className="space-y-4">
+            <h3 className="text-white font-bold uppercase mb-4 md:mb-6 text-xs md:text-sm tracking-wider">
               Support
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2 md:space-y-3 text-sm">
               {[
                 { name: 'About Us', path: '/about' },
                 { name: 'Contact', path: '/contact' },
@@ -103,7 +104,7 @@ export default function Footer() {
                     className="group text-gray-400 hover:text-[#00bfff] transition-colors flex items-center gap-1"
                   >
                     {link.name}
-                    <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                   </Link>
                 </li>
               ))}
@@ -111,30 +112,30 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div>
-            <h3 className="text-white font-bold uppercase mb-6 text-sm tracking-wider">
+          <div className="space-y-4">
+            <h3 className="text-white font-bold uppercase mb-4 md:mb-6 text-xs md:text-sm tracking-wider">
               Contact
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-3 md:space-y-4">
               <li className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-[#00bfff]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <MapPin size={16} className="text-[#00bfff]" />
+                <div className="w-8 h-8 md:w-9 md:h-9 bg-[#00bfff]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <MapPin size={14} className="text-[#00bfff] md:w-4 md:h-4" />
                 </div>
-                <span className="text-gray-400 text-sm whitespace-pre-line">
+                <span className="text-gray-400 text-xs md:text-sm whitespace-pre-line leading-relaxed">
                   {settings.address}
                 </span>
               </li>
               <li className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-[#00bfff]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Phone size={16} className="text-[#00bfff]" />
+                <div className="w-8 h-8 md:w-9 md:h-9 bg-[#00bfff]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Phone size={14} className="text-[#00bfff] md:w-4 md:h-4" />
                 </div>
-                <span className="text-gray-400 text-sm">{settings.phone}</span>
+                <span className="text-gray-400 text-xs md:text-sm">{settings.phone}</span>
               </li>
               <li className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-[#00bfff]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Mail size={16} className="text-[#00bfff]" />
+                <div className="w-8 h-8 md:w-9 md:h-9 bg-[#00bfff]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Mail size={14} className="text-[#00bfff] md:w-4 md:h-4" />
                 </div>
-                <span className="text-gray-400 text-sm">{settings.email}</span>
+                <span className="text-gray-400 text-xs md:text-sm">{settings.email}</span>
               </li>
             </ul>
           </div>

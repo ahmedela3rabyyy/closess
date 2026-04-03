@@ -47,20 +47,20 @@ export default function Checkout() {
 
   const redirectToWhatsApp = (orderRef: string) => {
     const adminPhone = settings.whatsappNumber; 
-    const itemsList = items.map(item => `• ${item.name} | المقاس: ${item.size} | الكمية: ${item.quantity}`).join('\n');
+    const itemsList = items.map(item => `• ${item.name} | المقاس: ${item.size || 'N/A'} | الكمية: ${item.quantity}`).join('\n');
     
     const message = `*NYX OFFICIAL ORDER [${orderRef}]*\n\n` +
-      `أهلاً بك في NYX Studio 🌌\n\n` +
-      `عزيزنا *${shippingInfo.customerName}*، نود إبلاغك بأن طلبك رقم [${orderRef}] قد تم استلامه بنجاح وبقيمة إجمالية *${settings.currency} ${total}*.\n\n` +
-      `*تفاصيل الطلب:*\n` +
+      `أهلاً NYX Studio، أود تأكيد طلبي رقم [${orderRef}]\n\n` +
+      `• الاسم: *${shippingInfo.customerName}*\n` +
+      `• القيمة الإجمالية: *${settings.currency} ${total}*\n\n` +
+      `*تفاصيل المنتجات:*\n` +
       `${itemsList}\n\n` +
       `-------------------------- \n` +
       `*بيانات الشحن:*\n` +
       `🏙️ المحافظة: ${shippingInfo.governorate}\n` +
       `📍 العنوان: ${shippingInfo.address}\n` +
       `📱 التليفون: ${shippingInfo.phone}\n\n` +
-      `نحن نعمل على تجهيز قطعتك الفريدة بكل إتقان. يرجى تأكيد ميعاد التوصيل. 🚀\n\n` +
-      `شكراً لاختيارك NYX.`;
+      `أرجو تأكيد استلام الطلب وإبلاغي بموعد التوصيل. شكراً لكم. ✨`;
 
     const url = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');

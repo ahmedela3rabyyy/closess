@@ -17,13 +17,17 @@ export default function ProductDetail() {
   const { settings } = useSettings();
   const product = getProductById(Number(id));
   
-  const { addToCart } = useCart();
+  const { addToCart, items: cartItems } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
 
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
   const [showAddedMessage, setShowAddedMessage] = useState(false);
   
+  const getCartQuantityForSize = (productId: number, size: string) => {
+    return cartItems.find(item => item.id === productId && item.size === size)?.quantity || 0;
+  };
+
   // Gallery Engine States
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
@@ -61,20 +65,32 @@ export default function ProductDetail() {
 
   const handleAddToCart = () => {
     if (product.soldOut) return;
-    
-    // Get current stock for the selected size
-    const availableStock = selectedSize ? (product.sizeStock[selectedSize] || 0) : 0;
-    
-    // Check if requested quantity exceeds stock
-    if (quantity > availableStock) {
-      toast.error(`Only ${availableStock} pieces available in this size!`);
-      setQuantity(Math.max(1, availableStock));
-      return;
-    }
 
     if (product.sizes.length > 1 && !selectedSize) {
       toast.error('Please select a size');
       return;
+    }
+
+    const currentSize = selectedSize || (product.sizes[0] !== 'One Size' ? product.sizes[0] : 'One Size');
+    
+    // Get stats for validation
+    const availableStock = currentSize ? (product.sizeStock[currentSize] || 0) : 0;
+    const inCartQty = getCartQuantityForSize(product.id, currentSize);
+    const totalRequested = inCartQty + quantity;
+    
+    // Check if total exceeds stock
+    if (totalRequested > availableStock) {
+      if (inCartQty >= availableStock) {
+        toast.error(`You've already reached the limit for size ${currentSize} (${availableStock} items in bag).`);
+      } else {
+        toast.error(`Only ${availableStock - inCartQty} more pieces available for size ${currentSize}.`);
+      }
+      setQuantity(Math.max(1, availableStock - inCartQty));
+      return;
+    }
+
+    if (inCartQty > 0) {
+      toast.success(`Size ${currentSize} is already in your bag. Adding ${quantity} more.`);
     }
 
     addToCart({
@@ -83,7 +99,7 @@ export default function ProductDetail() {
       subtitle: product.subtitle,
       image: product.image,
       price: product.price,
-      size: selectedSize || (product.sizes[0] !== 'One Size' ? product.sizes[0] : 'One Size'),
+      size: currentSize,
     }, quantity);
 
     setShowAddedMessage(true);
@@ -121,32 +137,36 @@ export default function ProductDetail() {
     <div className="min-h-screen bg-black">
       <Header />
 
-      <main className="pt-32 pb-20 overflow-hidden">
+      <main className="pt-24 md:pt-32 pb-20 overflow-hidden">
         <div className="responsive-container">
           {/* Back Button */}
-          <motion.button
+          <motion.div
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            onClick={() => navigate('/')}
-            className="flex items-center gap-3 text-gray-500 hover:text-primary transition-colors mb-12 group"
+            className="mb-8 md:mb-12"
           >
-            <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-primary">
-              <ChevronLeft size={16} />
-            </div>
-            <span className="text-xs font-black uppercase tracking-widest">Back to Collection</span>
-          </motion.button>
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center gap-3 text-gray-500 hover:text-primary transition-colors group"
+            >
+              <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-primary">
+                <ChevronLeft size={16} />
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-widest">Back to Collection</span>
+            </button>
+          </motion.div>
 
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-20">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-20">
             {/* Product Gallery (Grid Col 7) */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
-              className="lg:col-span-7 space-y-6"
+              className="lg:col-span-7 space-y-4 md:space-y-6"
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
             >
-              <div className="relative aspect-[3/4] bg-neutral-950 rounded-3xl overflow-hidden border border-white/5 shadow-2xl group cursor-zoom-in">
+              <div className="relative aspect-[3/4] bg-neutral-950 rounded-2xl md:rounded-3xl overflow-hidden border border-white/5 shadow-2xl group cursor-zoom-in">
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={activeIndex}
@@ -170,43 +190,37 @@ export default function ProductDetail() {
                       key={activeIndex + (isHovering ? '-paused' : '-playing')}
                       initial={{ width: "0%" }}
                       animate={isHovering ? { width: "100%" } : { width: "100%" }}
-                      transition={isHovering ? { duration: 0 } : { duration: 5, ease: "linear" }}
+                      transition={isHovering ? { duration: 5, ease: "linear" } : { duration: 5, ease: "linear" }}
                       className="h-full bg-primary shadow-[0_0_15px_#00BFFF]"
                     />
                   </div>
                 )}
                 
                 {/* Image Counter Badge */}
-                <div className="absolute top-6 right-6 glass px-4 py-2 rounded-full border border-white/10 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                <div className="absolute top-4 right-4 md:top-6 md:right-6 glass px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/10 text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest">
                   {activeIndex + 1} / {allImages.length}
                 </div>
               </div>
               
               {/* Magnetic Interactive Thumbnails */}
-              <div className="grid grid-cols-4 sm:grid-cols-6 gap-4">
+              <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 md:gap-4">
                 {allImages.map((img, idx) => (
                   <motion.div 
                     key={idx}
-                    whileHover={{ scale: 1.1, y: -5 }}
-                    whileTap={{ scale: 0.9 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => {
                       setActiveIndex(idx);
                       // Reset interval timer manually on click
                       if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current);
                     }}
-                    className={`relative aspect-square bg-neutral-900 rounded-xl overflow-hidden border transition-all cursor-pointer ${
+                    className={`relative aspect-square bg-neutral-900 rounded-lg md:rounded-xl overflow-hidden border transition-all cursor-pointer ${
                       activeIndex === idx 
-                        ? 'border-primary shadow-[0_0_20px_rgba(0,191,255,0.2)]' 
-                        : 'border-white/5 grayscale hover:grayscale-0'
+                        ? 'border-primary shadow-[0_0_15px_rgba(0,191,255,0.2)]' 
+                        : 'border-white/5 opacity-50 hover:opacity-100'
                     }`}
                   >
                     <img src={img} alt="" className="w-full h-full object-cover" />
-                    {activeIndex === idx && (
-                      <motion.div 
-                        layoutId="active-thumb"
-                        className="absolute inset-0 border-2 border-primary rounded-xl"
-                      />
-                    )}
                   </motion.div>
                 ))}
               </div>
@@ -217,47 +231,46 @@ export default function ProductDetail() {
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="lg:col-span-5 space-y-10"
+              className="lg:col-span-5 space-y-8 md:space-y-10"
             >
-              <div className="space-y-4">
+              <div className="space-y-4 text-center lg:text-left">
                 {/* Badges */}
-                <motion.div variants={itemVariants} className="flex gap-3">
-                  {product.isNew && <span className="glass px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-primary border-primary/20">New Season</span>}
-                  {product.isSale && <span className="bg-red-500/10 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-red-500 border border-red-500/20">Sale</span>}
-                  {product.soldOut && <span className="bg-white/10 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-gray-400">Sold Out</span>}
+                <motion.div variants={itemVariants} className="flex justify-center lg:justify-start gap-2 md:gap-3">
+                  {product.isNew && <span className="glass px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest text-primary border-primary/20">New Season</span>}
+                  {product.isSale && <span className="bg-red-500/10 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest text-red-500 border border-red-500/20">Sale</span>}
                 </motion.div>
 
-                <motion.div variants={itemVariants}>
-                  <h1 className="text-white text-4xl md:text-6xl font-black uppercase tracking-tighter leading-[0.9]">
+                <motion.div variants={itemVariants} className="space-y-2">
+                  <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-[0.9]">
                     {product.name}
                   </h1>
-                  <p className="text-gray-500 text-lg md:text-xl font-bold uppercase tracking-[0.2em] mt-2">
+                  <p className="text-gray-500 text-base md:text-xl font-bold uppercase tracking-[0.2em]">
                     {product.subtitle}
                   </p>
                 </motion.div>
 
                 {/* Rating */}
-                <motion.div variants={itemVariants} className="flex items-center gap-1">
+                <motion.div variants={itemVariants} className="flex items-center justify-center lg:justify-start gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={14} className={i < Math.floor(product.rating) ? 'text-primary fill-primary' : 'text-neutral-800'} />
+                    <Star key={i} size={12} className={i < Math.floor(product.rating) ? 'text-primary fill-primary' : 'text-neutral-800'} />
                   ))}
-                  <span className="text-gray-500 text-xs font-bold ml-2 uppercase tracking-widest">({product.reviews} Verification Reviews)</span>
+                  <span className="text-gray-500 text-[10px] font-bold ml-2 uppercase tracking-widest">({product.reviews} Reviews)</span>
                 </motion.div>
               </div>
 
               {/* Price */}
-              <motion.div variants={itemVariants} className="flex items-baseline gap-6">
-                <span className="text-primary text-5xl font-black tracking-tight">
+              <motion.div variants={itemVariants} className="flex items-baseline justify-center lg:justify-start gap-4 md:gap-6">
+                <span className="text-primary text-4xl md:text-5xl font-black tracking-tight">
                   {settings.currency} {product.price}
                 </span>
                 {product.originalPrice && (
-                  <span className="text-gray-600 text-2xl line-through font-bold">
+                  <span className="text-gray-600 text-xl md:text-2xl line-through font-bold">
                     {settings.currency} {product.originalPrice}
                   </span>
                 )}
               </motion.div>
 
-              <motion.p variants={itemVariants} className="text-gray-400 leading-relaxed text-base font-medium max-w-md">
+              <motion.p variants={itemVariants} className="text-gray-400 leading-relaxed text-sm md:text-base font-medium max-w-md mx-auto lg:mx-0 text-center lg:text-left">
                 {product.description}
               </motion.p>
 
@@ -306,6 +319,17 @@ export default function ProductDetail() {
                     );
                   })}
                 </div>
+                {/* In Bag Message */}
+                {selectedSize && getCartQuantityForSize(product.id, selectedSize) > 0 && (
+                  <motion.p
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-primary text-[10px] font-black uppercase tracking-widest mt-4 flex items-center gap-2"
+                  >
+                    <Check size={12} className="text-primary" />
+                    Size {selectedSize} is already in your bag ({getCartQuantityForSize(product.id, selectedSize)} items)
+                  </motion.p>
+                )}
                 </motion.div>
 
                 {/* Quantity & Actions */}

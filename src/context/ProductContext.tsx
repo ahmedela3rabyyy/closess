@@ -1,16 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import { type Product, products as initialProducts } from '../data/products';
+import { type Product } from '../data/products';
 import { db } from '../lib/firebase';
 import { 
   collection, 
   onSnapshot, 
-  query, 
   addDoc, 
   updateDoc, 
   doc, 
   deleteDoc, 
-  getDocs,
-  writeBatch,
   runTransaction
 } from 'firebase/firestore';
 
@@ -32,6 +29,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   useEffect(() => {
     // SEEDING LOGIC: Seed initial products if collection is empty
+    /* 
     const seedData = async () => {
       const q = query(collection(db, 'products'));
       const snapshot = await getDocs(q);
@@ -48,6 +46,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
     };
 
     seedData().catch(console.error);
+    */
 
     // REAL-TIME LISTENER
     const unsubscribe = onSnapshot(collection(db, 'products'), (snapshot) => {

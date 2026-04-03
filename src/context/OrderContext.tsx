@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import { db } from '../lib/firebase';
+import { db, auth } from '../lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import { 
   collection, 
   onSnapshot, 
@@ -47,17 +48,30 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(collection(db, 'orders'), orderBy('date', 'desc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const ordersData = snapshot.docs.map(doc => ({
-        ...doc.data(),
-        id: doc.id
-      })) as Order[];
-      setOrders(ordersData);
-      setLoading(false);
+    // Only listen for orders if an admin is logged in
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const q = query(collection(db, 'orders'), orderBy('date', 'desc'));
+        const unsubscribeOrders = onSnapshot(q, (snapshot) => {
+          const ordersData = snapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id
+          })) as Order[];
+          setOrders(ordersData);
+          setLoading(false);
+        }, (error) => {
+          console.error("Firestore Listen Error:", error);
+          setLoading(false);
+        });
+
+        return () => unsubscribeOrders();
+      } else {
+        setOrders([]);
+        setLoading(false);
+      }
     });
 
-    return () => unsubscribe();
+    return () => unsubscribeAuth();
   }, []);
 
   const addOrder = async (orderData: Omit<Order, 'id' | 'status' | 'date'>) => {

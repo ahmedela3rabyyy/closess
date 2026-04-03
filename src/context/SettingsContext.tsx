@@ -3,8 +3,7 @@ import { db } from '../lib/firebase';
 import { 
   doc, 
   onSnapshot, 
-  setDoc, 
-  getDoc
+  setDoc
 } from 'firebase/firestore';
 
 interface Settings {
@@ -26,6 +25,8 @@ interface Settings {
   shippingThreshold: number;
   shippingCairo: number;
   shippingOutside: number;
+  announcementText: string;
+  showAnnouncement: boolean;
 }
 
 interface SettingsContextType {
@@ -52,7 +53,9 @@ const defaultSettings: Settings = {
   seoDescription: 'Premium knitwear designed for comfort and midnight luxury.',
   shippingThreshold: 2000,
   shippingCairo: 0,
-  shippingOutside: 60
+  shippingOutside: 60,
+  announcementText: 'Free Shipping on Orders Over $100 • 30-Day Returns',
+  showAnnouncement: true
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -65,6 +68,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
     const docRef = doc(db, 'settings', 'global');
     
     // SEEDING & LISTENING
+    /*
     const initializeSettings = async () => {
       const docSnap = await getDoc(docRef);
       if (!docSnap.exists()) {
@@ -74,6 +78,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
     };
 
     initializeSettings().catch(console.error);
+    */
 
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists()) {
