@@ -39,3 +39,6 @@ Ensure you have [Node.js](https://nodejs.org/) installed on your machine (v18+ r
    ```bash
    git clone [https://github.com/your-username/closess.git](https://github.com/your-username/closess.git)
    cd closess
+
+2. Install dependencies:
+     
